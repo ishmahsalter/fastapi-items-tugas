@@ -24,23 +24,3 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return item
-
-# ENDPOINT 3: POST (untuk nambah data biar bisa di-GET)
-@app.post("/items/")
-def create_item(
-    name: str, 
-    price: float, 
-    description: str = None, 
-    is_offer: bool = False, 
-    db: Session = Depends(get_db)
-):
-    db_item = models.Item(
-        name=name,
-        description=description,
-        price=price,
-        is_offer=is_offer
-    )
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return {"message": "Item created", "id": db_item.id}
